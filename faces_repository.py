@@ -10,7 +10,7 @@ def get_faces_data() -> tuple[np.ndarray, np.ndarray]:
 
     for i in range(1, 41):
         for j in range(1, 11):
-            image = cv2.cvtColor(cv2.imread(data_folder + str(i) + "/" + str(j) + ".pgm"), cv2.COLOR_BGR2GRAY)
+            image = cv2.cvtColor(cv2.imread(data_folder + str(i) + "/" + str(j) + ".bmp"), cv2.COLOR_BGR2GRAY)
             data_faces.append(image / 255)
             data_target.append(i)
 

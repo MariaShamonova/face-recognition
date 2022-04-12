@@ -1,4 +1,9 @@
-@dataclass
+import dataclasses
+import numpy as np
+from feature_getters import FeatureGetter
+
+
+@dataclasses.dataclass
 class FaceRecognizer:
     x_train: list
     y_train: list
@@ -38,12 +43,13 @@ class FaceRecognizer:
         correct_answers = 0
 
         for idx_test, face_test in enumerate(self.faces_test_featured):
-            right_answer = y_test[idx_test]
+            right_answer = self.y_test[idx_test]
             recognizer_answer = self.recognize_face(face_test)
             if right_answer == recognizer_answer:
                 correct_answers += 1
 
         print('Точность распознавания:', correct_answers / len(self.faces_test_featured))
+
 
 
 # data_faces, data_target = faces_repository.get_faces_data()

@@ -30,9 +30,9 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>-801</y>
+       <y>0</y>
        <width>764</width>
-       <height>1345</height>
+       <height>1069</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -79,7 +79,7 @@
            <number>0</number>
           </property>
           <widget class="QWidget" name="page_5">
-           <widget class="QLineEdit" name="param_bin_2">
+           <widget class="QLineEdit" name="param_bin">
             <property name="geometry">
              <rect>
               <x>10</x>
@@ -101,11 +101,11 @@ padding-left: 10px;</string>
            </widget>
           </widget>
           <widget class="QWidget" name="page_8">
-           <widget class="QLineEdit" name="param_p_2">
+           <widget class="QLineEdit" name="param_p">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>20</y>
+              <y>10</y>
               <width>115</width>
               <height>30</height>
              </rect>
@@ -121,11 +121,11 @@ padding-left: 10px;</string>
              <string>Enter P</string>
             </property>
            </widget>
-           <widget class="QLineEdit" name="param_q_2">
+           <widget class="QLineEdit" name="param_q">
             <property name="geometry">
              <rect>
               <x>140</x>
-              <y>20</y>
+              <y>10</y>
               <width>115</width>
               <height>30</height>
              </rect>
@@ -143,11 +143,11 @@ padding-left: 10px;</string>
            </widget>
           </widget>
           <widget class="QWidget" name="page_6">
-           <widget class="QLineEdit" name="param_pq_2">
+           <widget class="QLineEdit" name="param_pq">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>20</y>
+              <y>10</y>
               <width>115</width>
               <height>30</height>
              </rect>
@@ -165,11 +165,11 @@ padding-left: 10px;</string>
            </widget>
           </widget>
           <widget class="QWidget" name="page_9">
-           <widget class="QLineEdit" name="param_scale_2">
+           <widget class="QLineEdit" name="param_scale">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>20</y>
+              <y>10</y>
               <width>115</width>
               <height>30</height>
              </rect>
@@ -187,11 +187,11 @@ padding-left: 10px;</string>
            </widget>
           </widget>
           <widget class="QWidget" name="page_10">
-           <widget class="QLineEdit" name="param_w_2">
+           <widget class="QLineEdit" name="param_w">
             <property name="geometry">
              <rect>
               <x>10</x>
-              <y>20</y>
+              <y>10</y>
               <width>115</width>
               <height>30</height>
              </rect>
@@ -294,169 +294,6 @@ margin-left: 15px;</string>
              </size>
             </property>
            </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QLabel" name="label_example_images">
-          <property name="text">
-           <string>Example images in database</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="example_1_1">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 1 1</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="example_1_2">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 1 2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="example_1_3">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 1 3</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="example_2_1">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 2 1</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="example_2_2">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 2 2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="example_2_3">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Example 2 3</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
           </item>
          </layout>
         </item>
@@ -846,7 +683,7 @@ padding-left: 20px;</string>
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
