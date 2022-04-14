@@ -20,7 +20,7 @@
       <x>10</x>
       <y>0</y>
       <width>781</width>
-      <height>531</height>
+      <height>471</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -32,7 +32,7 @@
        <x>0</x>
        <y>0</y>
        <width>764</width>
-       <height>1069</height>
+       <height>594</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -42,7 +42,7 @@
          <widget class="QComboBox" name="comboBox">
           <item>
            <property name="text">
-            <string>HIstogram</string>
+            <string>Histogram</string>
            </property>
           </item>
           <item>
@@ -118,27 +118,7 @@ padding-left: 10px;</string>
              <string/>
             </property>
             <property name="placeholderText">
-             <string>Enter P</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="param_q">
-            <property name="geometry">
-             <rect>
-              <x>140</x>
-              <y>10</y>
-              <width>115</width>
-              <height>30</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(190, 190, 190);
-padding-left: 10px;</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="placeholderText">
-             <string>Enter Q</string>
+             <string>Enter P/Q</string>
             </property>
            </widget>
           </widget>
@@ -300,205 +280,15 @@ margin-left: 15px;</string>
        </layout>
       </item>
       <item>
-       <widget class="QLabel" name="label_example_feature">
-        <property name="text">
-         <string>Example features for selected method</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
-        <item>
-         <widget class="QLabel" name="example_feature">
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(200, 200, 200);
-padding-left: 20px;</string>
-          </property>
-          <property name="text">
-           <string>Feature Example</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QLabel" name="label_answers">
-          <property name="text">
-           <string>Example answers</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
-            <item>
-             <widget class="QLabel" name="answer_1_1">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Images 1</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="answer_1_2">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Result 1</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <item>
-             <widget class="QLabel" name="answer_2_1">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Images 2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="answer_2_2">
-              <property name="minimumSize">
-               <size>
-                <width>92</width>
-                <height>112</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
-              </property>
-              <property name="text">
-               <string>Result 2</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_10">
-        <item>
-         <widget class="QLabel" name="label_result_selected_params">
-          <property name="text">
-           <string>Сlassification result for a selected parameter</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="score_for_selected_parameter">
-          <property name="text">
-           <string>Result</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="title_selecteion_method">
         <item>
          <widget class="QLabel" name="label_method_name">
+          <property name="styleSheet">
+           <string notr="true">font-weight: 500;
+margin-top: 15px;</string>
+          </property>
           <property name="text">
            <string>Selection of parameters for the best result</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="method_name">
-          <property name="text">
-           <string>Method</string>
           </property>
          </widget>
         </item>

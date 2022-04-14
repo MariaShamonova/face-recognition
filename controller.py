@@ -35,7 +35,7 @@ class FaceRecognizer:
                 answer_idx = idx
                 min_distance = distance
 
-        return self.y_train[answer_idx]
+        return self.y_train[answer_idx], self.x_train[answer_idx]
 
     def get_recognize_score(self):
         self.faces_test_featured.extend(self.classifier.get_feature(face_test) for face_test in self.x_test)
@@ -44,13 +44,15 @@ class FaceRecognizer:
 
         for idx_test, face_test in enumerate(self.faces_test_featured):
             right_answer = self.y_test[idx_test]
-            recognizer_answer = self.recognize_face(face_test)
+            recognizer_answer = self.recognize_face(face_test)[0]
+
             if right_answer == recognizer_answer:
                 correct_answers += 1
 
+
         print('Точность распознавания:', correct_answers / len(self.faces_test_featured))
 
-
+        return correct_answers / len(self.faces_test_featured)
 
 # data_faces, data_target = faces_repository.get_faces_data()
 # feature_getter = Histogram
