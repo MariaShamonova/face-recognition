@@ -19,11 +19,20 @@ class FeatureGetter:
     def get_feature(self, *args):
         ...
 
+    @abstractmethod
+    def get_teach_param(self, *args):
+        ...
+
+    @abstractmethod
+    def set_param(self, *args):
+        ...
+
 
 class Histogram(FeatureGetter):
     num_bins: int = 30
 
     def plot(self, image: np.ndarray) -> bytes:
+
         hist, bins = np.histogram(image, bins=np.linspace(0, 1, self.num_bins))
         hist = np.insert(hist, 0, 0.0)
         plt.figure(figsize=(20,10))
@@ -41,6 +50,12 @@ class Histogram(FeatureGetter):
         hist, bins = np.histogram(image, bins=np.linspace(0, 1, self.num_bins))
         return hist
 
+    def get_teach_param(self, image=None):
+        return range(0, 255, 5)
+
+    def set_param(self, num_bins: int):
+        self.num_bins = num_bins
+
 
 class DFT(FeatureGetter):
     p: int = 13
@@ -57,11 +72,16 @@ class DFT(FeatureGetter):
         return path
 
     def get_feature(self, image: int):
-
         ftimage = np.fft.fft2(image)
-
         ftimage = ftimage[0: self.p, 0: self.p]
+
         return np.abs(ftimage)
+
+    def get_teach_param(self, image=None):
+        return range(30)
+
+    def set_param(self, p: int):
+        self.p = p
 
 
 class DCT(FeatureGetter):
@@ -85,6 +105,12 @@ class DCT(FeatureGetter):
         c = c[0: self.p, 0: self.p]
 
         return c
+
+    def get_teach_param(self, image=None):
+        return range(30)
+
+    def set_param(self, p: int):
+        self.p = p
 
 
 class Scale(FeatureGetter):
@@ -113,12 +139,67 @@ class Scale(FeatureGetter):
 
         return cv2.resize(image, new_size, interpolation=cv2.INTER_AREA)
 
+    def get_teach_param(self, image=None):
+        return np.arange(0.1, 1.1, 0.1)
+
+    def set_param(self, scale: int):
+        self.scale = scale
+
+
 class Gradient(FeatureGetter):
-    num_bin: int = 0.3
+    window_width: int = 2
+
+    @staticmethod
+    def _calculate_distance(array_1: np.ndarray, array_2: np.ndarray) -> float:
+        return np.linalg.norm(np.array(array_1) - np.array(array_2))
 
     def plot(self, image: np.ndarray) -> bytes:
-        print('not realize')
+        height, width = image.shape
+
+        num_steps = int(height / self.window_width)
+        gradients = []
+
+        for i in range(num_steps - 2):
+            step = i * self.window_width
+
+            start_window = image[step: step + self.window_width]
+            end_window = image[step + self.window_width: step + self.window_width * 2]
+
+            gradients.append(self._calculate_distance(start_window, end_window))
+
+        plt.figure(figsize=(20, 10))
+        ax = plt.gca()
+        plt.xticks(fontsize=30)
+        plt.yticks(fontsize=30)
+        ax.grid(linewidth=3)
+        plt.plot(range(num_steps - 2), gradients, linewidth=4)
+        path = 'features.png'
+        plt.savefig(path)
+
+        return path
 
     def get_feature(self, image: int):
-        print('not realize')
+
+        height, width = image.shape
+
+        num_steps = height // self.window_width
+        gradients = []
+
+        for i in range(num_steps - 2):
+            step = i * self.window_width
+
+            start_window = image[step: step + self.window_width]
+            end_window = image[step + self.window_width: step + self.window_width * 2]
+
+            gradients.append(self._calculate_distance(start_window, end_window))
+
+        return gradients
+
+    def get_teach_param(self, image):
+        height, width = image.shape
+
+        return range(1,height//2)
+
+    def set_param(self, window_width: int):
+        self.window_width = window_width
 
