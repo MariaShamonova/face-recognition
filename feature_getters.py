@@ -51,7 +51,7 @@ class Histogram(FeatureGetter):
         return hist
 
     def get_teach_param(self, image=None):
-        return range(0, 255, 5)
+        return range(1, 255, 5)
 
     def set_param(self, num_bins: int):
         self.num_bins = num_bins

@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>791</width>
-      <height>471</height>
+      <height>521</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -32,7 +32,7 @@
        <x>0</x>
        <y>0</y>
        <width>789</width>
-       <height>469</height>
+       <height>519</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">

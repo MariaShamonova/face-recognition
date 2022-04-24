@@ -18,11 +18,11 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
-        self.scrollArea.setGeometry(QtCore.QRect(10, 10, 791, 471))
+        self.scrollArea.setGeometry(QtCore.QRect(10, 10, 791, 531))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 789, 469))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 789, 529))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -88,7 +88,6 @@ class Ui_MainWindow(object):
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
         self.verticalLayout_5.addWidget(self.line)
-
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem2)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
@@ -123,4 +122,3 @@ class Ui_MainWindow(object):
         self.count_faces_in_train.setText(_translate("MainWindow", "4"))
         self.count_faces_in_train.setPlaceholderText(_translate("MainWindow", "Enter № Class"))
         self.resultButton.setText(_translate("MainWindow", "Find"))
-

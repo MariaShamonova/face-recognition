@@ -3,13 +3,13 @@ import numpy as np
 import pathlib
 
 
-def get_faces_data(num_classes: int = 41, num_images: int = 11) -> tuple[np.ndarray, np.ndarray]:
+def get_faces_data(num_classes: int = 40, num_images: int = 10) -> tuple[np.ndarray, np.ndarray]:
     data_faces = []
     data_target = []
     data_folder = str(pathlib.Path(__file__).parent.resolve()) + "/faces/s"
 
-    for i in range(1, num_classes):
-        for j in range(1, num_images):
+    for i in range(1, num_classes + 1):
+        for j in range(1, num_images + 1):
             image = cv2.cvtColor(cv2.imread(data_folder + str(i) + "/" + str(j) + ".bmp"), cv2.COLOR_BGR2GRAY)
             data_faces.append(image / 255)
             data_target.append(i)

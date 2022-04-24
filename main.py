@@ -1,10 +1,13 @@
 import dataclasses
 import random
+import statistics
 from dataclasses import dataclass
 from multiprocessing import Queue, Process, Pool
 from itertools import repeat
 from statistics import mode
 import numpy as np
+from matplotlib import pyplot as plt
+
 import faces_repository
 from feature_getters import FeatureGetter, Histogram, DFT, DCT, Scale, Gradient
 import pathlib
@@ -59,11 +62,12 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         num_faces_for_train = int(self.count_faces_in_train.text())
 
         data_faces, data_target = get_faces_data()
+
         self.display_example_images_in_database()
 
         x_train, y_train, x_test, y_test = faces_repository.split_data(data_faces, data_target, num_faces_for_train)
 
-        self.get_params_for_method()
+
         classifier = eval(method_name)()
         face_recognizer = FaceRecognizer(x_train=x_train, x_test=x_test, y_train=y_train, y_test=y_test,
                                          classifier=classifier)
@@ -74,55 +78,107 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         self.display_example_features(classifier)
         self.display_example_answer_algorithm(data_faces, classifier, face_recognizer)
         self.display_result_for_selected_parameter(score)
-        best_param, max_score = self.display_selection_parameter(face_recognizer)
 
-        scores = face_recognizer.cross_validation(data_faces, data_target, best_param)
+        scores_params = self.get_scores_for_selection_parameters(face_recognizer)
+        best_param, max_score = max(scores_params, key=lambda x: x[1])
 
-        self.display_cross_validation(scores)
+        scores_folds = self.get_scores_for_cross_validation_folds(face_recognizer, best_param, data_faces, data_target,)
 
-        score = self.parallel_computing()
-        self.display_parallel_system_score(score)
+        self.display_selection_parameters_and_scores(scores_params, scores_folds)
 
-        self.computed_dependence_score_by_count_images(best_param, )
+        scores = self.parallel_computing()
+        self.display_parallel_system_score(max(scores, key=lambda x: x[1]))
+        self.display_parallel_computing_result(scores)
 
-    def computed_dependence_score_by_count_images(self):
-        print('computing')
+    def build_line_plot(self, data, name):
+        plt.figure(figsize=(20, 10), dpi=80)
+        ax = plt.gca()
+        plt.xticks(fontsize=35)
+        plt.yticks(fontsize=35)
+        ax.grid(linewidth=4)
+        plt.plot(*zip(*data), linewidth=5)
+        save_path = name + '.png'
+        plt.savefig(save_path)
 
-    def parallel_computing(self):
-        num_faces_for_train = int(self.count_faces_in_train.text())
-        data_faces, data_target = get_faces_data()
-        x_train, y_train, x_test, y_test = faces_repository.split_data(data_faces, data_target, num_faces_for_train)
+        return save_path
 
-        self.get_params_for_method()
+    def get_scores_for_selection_parameters(self, face_recognizer):
+        return face_recognizer.get_list_params()
 
-        scores_futures = []
-
-        for method in self.methods:
-            classifier = eval(method)()
-            face_recognizer = FaceRecognizer(x_train=x_train, x_test=x_test, y_train=y_train, y_test=y_test,
-                                             classifier=classifier)
-            face_recognizer.teach_recognizer()
-            scores_futures.append(face_recognizer.get_answers)
-
-        answers = self.parallelize(len(self.methods), scores_futures)
-
-        correct_answer = 0
-        for idx_test in range(len(y_test)):
-            answer = mode([recognizer_answer[idx_test] for recognizer_answer in answers])
-            if y_test[idx_test] == answer:
-                correct_answer += 1
-
-        return correct_answer / len(y_test)
+    def get_scores_for_cross_validation_folds(self, face_recognizer, best_param, data_faces, data_target,):
+       return face_recognizer.cross_validation(data_faces, data_target, best_param)
 
     @staticmethod
     def parallelize(n_workers, functions):
+
         with Pool(n_workers) as pool:
             futures = [pool.apply_async(t) for t in functions]
             results = [fut.get() for fut in futures]
+
         return results
+
+    def parallel_computing(self):
+        data_faces, data_target = get_faces_data()
+
+        folds = np.arange(2, 10)
+        scores = []
+
+        for fold in folds:
+            scores_for_k_fold = []
+
+            for x_train, y_train, x_test, y_test in split_data_for_cross_validation(data_faces, data_target, fold):
+                answers_futures = []
+
+                for method in self.methods:
+                    classifier = eval(method)()
+                    face_recognizer = FaceRecognizer(x_train=x_train, x_test=x_test, y_train=y_train, y_test=y_test,
+                                                     classifier=classifier)
+                    face_recognizer.teach_recognizer()
+                    answers_futures.append(face_recognizer.get_answers)
+
+                answers = self.parallelize(len(self.methods), answers_futures)
+
+                correct_answer = 0
+                for idx_test in range(len(y_test)):
+                    answer = mode([recognizer_answer[idx_test] for recognizer_answer in answers])
+                    if y_test[idx_test] == answer:
+                        correct_answer += 1
+
+                score = correct_answer / len(y_test)
+                scores_for_k_fold.append(score)
+
+            scores.append((fold, statistics.mean(scores_for_k_fold)))
+
+        return scores
+
+    def display_parallel_computing_result(self, scores):
+        label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        label.setObjectName("label_example_feature")
+        label.setText(_translate("MainWindow", "Result" ))
+        self.verticalLayout_5.addWidget(label)
+
+        horizontalLayout = QtWidgets.QHBoxLayout()
+        self.verticalLayout_5.addLayout(horizontalLayout)
+        horizontalLayout.setObjectName("horizontalLayout_9")
+
+        self.example_face = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        self.example_feature = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        self.example_feature.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignLeft)
+
+        path_to_line_chart = self.build_line_plot(scores, 'scores_folds')
+
+        pixmap = QtGui.QPixmap(path_to_line_chart).scaled(400, 400, QtCore.Qt.KeepAspectRatio)
+        self.example_face.setPixmap(pixmap)
+        horizontalLayout.addWidget(self.example_face)
+
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        horizontalLayout.addItem(spacerItem1)
+
+
 
     def display_example_images_in_database(self, count_image_per_person=3):
         self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.addLayout(self.verticalLayout)
         self.example_images_title = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.example_images_title.setObjectName("example_images_title")
         self.example_images_title.setText(_translate("MainWindow", "Example images in database"))
@@ -148,15 +204,14 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
             self.example_images_wrapper.addLayout(example_images_row)
 
         self.verticalLayout.addLayout(self.example_images_wrapper)
-        self.verticalLayout_5.addLayout(self.verticalLayout)
 
     def display_example_features(self,  classifier):
-
         self.label_example_feature = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label_example_feature.setObjectName("label_example_feature")
         self.label_example_feature.setText(_translate("MainWindow", "Example features for selected method: " + self.comboBox.currentText()))
         self.verticalLayout_5.addWidget(self.label_example_feature)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
+        self.verticalLayout_5.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
 
         self.example_face = QtWidgets.QLabel(self.scrollAreaWidgetContents)
@@ -182,7 +237,6 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
 
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_9.addItem(spacerItem1)
-        self.verticalLayout_5.addLayout(self.horizontalLayout_9)
 
     def display_example_answer_algorithm(self, data_faces, classifier, face_recognizer):
 
@@ -270,131 +324,65 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.verticalLayout_5.addLayout(self.horizontalLayout_10)
 
-    def display_selection_parameter(self, face_recognizer):
-        self.title_selecteion_method = QtWidgets.QHBoxLayout()
-        self.title_selecteion_method.setObjectName("title_selecteion_method")
-        self.label_method_name = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_method_name.setStyleSheet("font-weight: 500;\n"
-                                             "margin-top: 15px;")
-        self.label_method_name.setObjectName("label_method_name")
-        self.label_method_name.setText(_translate("MainWindow", "Selection of parameters for the best result"))
-        self.title_selecteion_method.addWidget(self.label_method_name)
-        self.verticalLayout_5.addLayout(self.title_selecteion_method)
-        self.line = QtWidgets.QFrame(self.scrollAreaWidgetContents)
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.verticalLayout_5.addWidget(self.line)
-        self.title_table_best_scors = QtWidgets.QHBoxLayout()
-        self.title_table_best_scors.setObjectName("title_table_best_scors")
+    def display_selection_parameters_and_scores(self, scores_params, scores_folds):
+        verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.addLayout(verticalLayout)
+        verticalLayout.setObjectName("verticalLayout_2")
+        self.label_answers = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        self.label_answers.setObjectName("label_answers")
+        self.label_answers.setText(_translate("MainWindow", "Results"))
+        self.label_answers.setStyleSheet("margin-left: 15px;")
+        verticalLayout.addWidget(self.label_answers)
 
-        # Заголовок
-        self.title_table_best_scors_col_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.title_table_best_scors_col_2.setMinimumSize(QtCore.QSize(0, 30))
-        self.title_table_best_scors_col_2.setObjectName("title_table_best_scors_col_2")
-        self.title_table_best_scors_col_2.setText(_translate("MainWindow", "Parameter"))
-        self.title_table_best_scors.addWidget(self.title_table_best_scors_col_2)
-        self.title_table_best_scors_col_1 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.title_table_best_scors_col_1.setMinimumSize(QtCore.QSize(0, 30))
-        self.title_table_best_scors_col_1.setObjectName("title_table_best_scors_col_1")
-        self.title_table_best_scors_col_1.setText(_translate("MainWindow", "Score"))
-        self.title_table_best_scors.addWidget(self.title_table_best_scors_col_1)
-        self.verticalLayout_5.addLayout(self.title_table_best_scors)
+        self.formLayout = QtWidgets.QFormLayout()
+        self.formLayout.setLabelAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.formLayout.setFormAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
+        self.formLayout.setObjectName("formLayout")
 
+        label_parameters = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        label_parameters.setObjectName("label_anlabel_parametersswers_2")
+        label_parameters.setText(_translate("MainWindow", "Parameters"))
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, label_parameters)
 
-        self.scrollArea_2 = QtWidgets.QScrollArea(self.scrollAreaWidgetContents)
-        self.scrollArea_2.setMinimumSize(QtCore.QSize(0, 300))
-        self.scrollArea_2.setWidgetResizable(True)
-        self.scrollArea_2.setObjectName("scrollArea_2")
-        self.scrollAreaWidgetContents_3 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 738, 298))
-        self.scrollAreaWidgetContents_3.setObjectName("scrollAreaWidgetContents_3")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_3)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.best_params_rows = QtWidgets.QVBoxLayout()
-        self.best_params_rows.setObjectName("best_params_row")
+        label_folds = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        label_folds.setObjectName("label_folds")
+        label_folds.setText(_translate("MainWindow", "Folds"))
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, label_folds)
 
-        list_params = face_recognizer.get_list_params()
-        for param, score in list_params:
-            row = QtWidgets.QHBoxLayout()
+        horizontalLayout = QtWidgets.QHBoxLayout()
+        horizontalLayout.setObjectName("horizontalLayout_6")
 
-            column_parameter = QtWidgets.QLabel(self.scrollAreaWidgetContents_3)
-            column_parameter.setMaximumSize(QtCore.QSize(16777215, 30))
-            column_parameter.setBaseSize(QtCore.QSize(0, 30))
-            column_parameter.setText(_translate("MainWindow", str(param)))
+        answer = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        answer.setMinimumSize(QtCore.QSize(300, 200))
+        answer.setStyleSheet("background-color: rgb(200, 200, 200);")
+        answer.setAlignment(QtCore.Qt.AlignCenter)
+        answer.setObjectName("answer_1_2")
 
-            column_score = QtWidgets.QLabel(self.scrollAreaWidgetContents_3)
-            column_score.setMaximumSize(QtCore.QSize(16777215, 30))
-            column_score.setBaseSize(QtCore.QSize(0, 30))
-            column_score.setText(_translate("MainWindow", str(score)))
+        # Сюда должна приходить картинка графика фолдов
+        path_to_face_features = self.build_line_plot(scores_folds, 'scores_folds')
+        pixmap = QtGui.QPixmap(path + '/' + path_to_face_features).scaled(400, 400, QtCore.Qt.KeepAspectRatio)
+        answer.setPixmap(pixmap)
 
-            row.addWidget(column_parameter)
-            row.addWidget(column_score)
-            self.best_params_rows.addLayout(row)
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, answer)
 
-        best_param, max_score = max(list_params, key=lambda x: x[1])
+        image = QtWidgets.QLabel(self.scrollAreaWidgetContents)
+        image.setMinimumSize(QtCore.QSize(300, 200))
+        image.setStyleSheet("background-color: rgb(200, 200, 200);")
+        image.setAlignment(QtCore.Qt.AlignCenter)
+        image.setObjectName("answer_1_1")
 
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.best_params_rows.addItem(spacerItem1)
-        self.verticalLayout_7.addLayout(self.best_params_rows)
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_3)
-        self.verticalLayout_5.addWidget(self.scrollArea_2)
-        self.label_of_best_result = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_of_best_result.setObjectName("label_of_best_result")
-        self.verticalLayout_5.addWidget(self.label_of_best_result)
-        self.label_of_best_result.setText(_translate("MainWindow", f"Best parameter: {best_param}, best score: {max_score}"))
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        # Сюда должна приходить картинка графика параметров
+        path_to_face_features = self.build_line_plot(scores_params, 'scores_params')
+        pixmap = QtGui.QPixmap(path + '/' + path_to_face_features).scaled(400, 400, QtCore.Qt.KeepAspectRatio)
+        image.setPixmap(pixmap)
 
-        return best_param, max_score
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, image)
 
-    def display_cross_validation(self, scores):
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.label_cross_validation = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_cross_validation.setMaximumSize(QtCore.QSize(16777215, 30))
-        self.label_cross_validation.setStyleSheet("font-weight: 500;")
-        self.label_cross_validation.setObjectName("label_cross_validation")
-        self.label_cross_validation.setText(_translate("MainWindow", "Cross validation"))
-        self.verticalLayout.addWidget(self.label_cross_validation)
-
-        self.cross_validation_header_3 = QtWidgets.QHBoxLayout()
-        self.cross_validation_header_3.setObjectName("cross_validation_header_3")
-        self.cross_validation_header_fold = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.cross_validation_header_fold.setObjectName("cross_validation_header_fold")
-        self.cross_validation_header_fold.setText(_translate("MainWindow", 'Amount fold'))
-
-        self.cross_validation_header_3.addWidget(self.cross_validation_header_fold)
-        self.cross_validation_header_score = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.cross_validation_header_score.setObjectName("cross_validation_header_score")
-        self.cross_validation_header_score.setText(_translate("MainWindow", "Mean score"))
-        self.cross_validation_header_3.addWidget(self.cross_validation_header_score)
-        self.verticalLayout.addLayout(self.cross_validation_header_3)
-
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-
-        for score in scores:
-            cross_validation_row = QtWidgets.QHBoxLayout()
-            cross_validation_row.setObjectName("cross_validation_row")
-            cross_validation_row_fold = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            cross_validation_row_fold.setObjectName("cross_validation_row_fold")
-            cross_validation_row_fold.setText(_translate("MainWindow", str(score[0])))
-            cross_validation_row.addWidget(cross_validation_row_fold)
-
-            cross_validation_row_score = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-            cross_validation_row_score.setObjectName("cross_validation_row_score")
-            cross_validation_row_score.setText(_translate("MainWindow", str(score[1])))
-            cross_validation_row.addWidget(cross_validation_row_score)
-
-            self.verticalLayout_2.addLayout(cross_validation_row)
-
-        self.verticalLayout.addLayout(self.verticalLayout_2)
-        self.verticalLayout_5.addLayout(self.verticalLayout)
-
-    # return cross-Validation_score()
+        verticalLayout.addLayout(self.formLayout)
 
     def display_parallel_system_score(self, score):
         self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.addLayout(self.verticalLayout)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -412,7 +400,7 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_parallel_system_value.setText(_translate("MainWindow", str(score)))
         self.horizontalLayout_2.addWidget(self.label_parallel_system_value)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.verticalLayout_5.addLayout(self.verticalLayout)
+
 
 def main():
     import sys
