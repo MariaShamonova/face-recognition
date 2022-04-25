@@ -1,6 +1,8 @@
 import dataclasses
 import random
 import statistics
+
+import cv2
 import numpy as np
 from feature_getters import FeatureGetter
 from faces_repository import split_data_for_cross_validation
@@ -49,7 +51,7 @@ class FaceRecognizer:
 
     def get_answers(self):
         answers = []
-        print('answers')
+
         for idx_test, face_test in enumerate(self.faces_test_featured):
             answers.append(self.recognize_face(face_test)[0])
 
@@ -62,9 +64,10 @@ class FaceRecognizer:
         for idx, known_face in enumerate(self.faces_train_featured):
             distance = self._calculate_distance(known_face, face)
             if distance < min_distance:
-                print(idx)
                 answer_idx = idx
                 min_distance = distance
+
+        return self.y_train[answer_idx], self.x_train[answer_idx]
 
 
     def get_recognize_score(self):

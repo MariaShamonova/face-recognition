@@ -5,7 +5,6 @@ import cv2
 import pylab
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.backends.backend_template import FigureCanvas
 from scipy.fft import dct
 
 
@@ -29,7 +28,8 @@ class FeatureGetter:
 
 
 class Histogram(FeatureGetter):
-    num_bins: int = 30
+    def __init__(self, num_bins: int = 30):
+        self.num_bins = num_bins
 
     def plot(self, image: np.ndarray) -> bytes:
 
@@ -37,16 +37,20 @@ class Histogram(FeatureGetter):
         hist = np.insert(hist, 0, 0.0)
         plt.figure(figsize=(20,10))
         ax = plt.gca()
-        plt.xticks(fontsize=30)
-        plt.yticks(fontsize=30)
-        ax.grid(linewidth=3)
-        plt.plot(bins, hist,  linewidth=4)
-        path = 'features.png'
+
+        plt.xticks(fontsize=55)
+        plt.yticks(fontsize=55)
+        ax.grid(linewidth=5)
+        plt.rcParams["font.weight"] = 500
+        plt.plot(bins, hist,  linewidth=6)
+        plt.setp(ax.spines.values(), linewidth=5)
+        path = 'results/Histogram.png'
         plt.savefig(path)
 
         return path
 
     def get_feature(self, image: np.ndarray) -> np.ndarray:
+
         hist, bins = np.histogram(image, bins=np.linspace(0, 1, self.num_bins))
         return hist
 
@@ -58,15 +62,18 @@ class Histogram(FeatureGetter):
 
 
 class DFT(FeatureGetter):
-    p: int = 13
+    def __init__(self, p: int = 13):
+        self.p = p
 
     def plot(self, image: np.ndarray) -> bytes:
         ftimage = np.fft.fft2(image)
         ftimage = ftimage[0: self.p, 0: self.p]
         ftimage = np.abs(ftimage)
-
+        pylab.xticks(fontsize=55)
+        pylab.yticks(fontsize=55)
+        pylab.rcParams["font.weight"] = 500
         pylab.imshow(np.abs(ftimage))
-        path = 'features.png'
+        path = 'results/DFT.png'
         pylab.savefig(path)
 
         return path
@@ -85,7 +92,8 @@ class DFT(FeatureGetter):
 
 
 class DCT(FeatureGetter):
-    p: int = 13
+    def __init__(self, p: int = 13):
+        self.p = p
 
     def plot(self, image: np.ndarray) -> bytes:
         dct_image = dct(image, axis=1)
@@ -93,7 +101,7 @@ class DCT(FeatureGetter):
         dct_image = dct_image[0: self.p, 0: self.p]
 
         pylab.imshow(np.abs(dct_image))
-        path = 'features.png'
+        path = 'results/DCT.png'
         pylab.savefig(path)
 
         return path
@@ -114,7 +122,8 @@ class DCT(FeatureGetter):
 
 
 class Scale(FeatureGetter):
-    scale: int = 0.3
+    def __init__(self, scale: int = 0.3):
+        self.scale = scale
 
     def plot(self, image: np.ndarray) -> bytes:
         h = image.shape[0]
@@ -127,7 +136,7 @@ class Scale(FeatureGetter):
         img = 255.0 * (output - min_val) / (max_val - min_val)
         img = img.astype(np.uint8)
 
-        path = 'features.png'
+        path = 'results/Scale.png'
         cv2.imwrite(path, img)
 
         return path
@@ -147,7 +156,8 @@ class Scale(FeatureGetter):
 
 
 class Gradient(FeatureGetter):
-    window_width: int = 2
+    def __init__(self, window_width: int = 2):
+        self.window_width = window_width
 
     @staticmethod
     def _calculate_distance(array_1: np.ndarray, array_2: np.ndarray) -> float:
@@ -169,11 +179,14 @@ class Gradient(FeatureGetter):
 
         plt.figure(figsize=(20, 10))
         ax = plt.gca()
-        plt.xticks(fontsize=30)
-        plt.yticks(fontsize=30)
-        ax.grid(linewidth=3)
-        plt.plot(range(num_steps - 2), gradients, linewidth=4)
-        path = 'features.png'
+        plt.xticks(fontsize=55)
+        plt.yticks(fontsize=55)
+        ax.grid(linewidth=5)
+        plt.rcParams["font.weight"] = 500
+
+        plt.setp(ax.spines.values(), linewidth=5)
+        plt.plot(range(num_steps - 2), gradients, linewidth=6)
+        path = 'results/Gradient.png'
         plt.savefig(path)
 
         return path

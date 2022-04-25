@@ -6,195 +6,279 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>826</width>
-    <height>600</height>
+    <width>800</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QScrollArea" name="scrollArea">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>791</width>
-      <height>521</height>
+      <y>90</y>
+      <width>781</width>
+      <height>511</height>
      </rect>
     </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>789</width>
-       <height>519</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
-        </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Explore</string>
+     </attribute>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>-10</y>
+        <width>771</width>
+        <height>511</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>769</width>
+         <height>509</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
         <item>
-         <widget class="QComboBox" name="comboBox">
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>30</height>
-           </size>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <property name="text">
-            <string>Histogram</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QComboBox" name="comboBox">
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>0</height>
+               </size>
+              </property>
+              <item>
+               <property name="text">
+                <string>Original images</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Deidentify images</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Faces in mask</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_15">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
           <item>
-           <property name="text">
-            <string>DFT</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QPushButton" name="buttonUploadDatabases">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border-radius: 4px;
+background-color: rgba(0, 114, 0, 112);
+padding: 0 20px;</string>
+              </property>
+              <property name="text">
+               <string>Upload database</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_images_download">
+              <property name="text">
+               <string>Изображения загружены</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <property name="tristate">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_18">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
           <item>
-           <property name="text">
-            <string>DCT</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QPushButton" name="buttonExploreMethods">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border-radius: 4px;
+background-color: rgb(198, 198, 198);
+color: rgb(142, 142, 142);
+padding: 0 20px;</string>
+              </property>
+              <property name="text">
+               <string>Explore methods</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="buttonParallelSystem">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border-radius: 4px;
+background-color: rgb(198, 198, 198);
+color: rgb(142, 142, 142);
+padding: 0 20px;</string>
+              </property>
+              <property name="text">
+               <string>Explore parallel system</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
           <item>
-           <property name="text">
-            <string>Scale</string>
-           </property>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
-          <item>
-           <property name="text">
-            <string>Gradient</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="param_field">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(190, 190, 190);
-padding-left: 10px;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="placeholderText">
-           <string>Enter BIN</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         </layout>
         </item>
        </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Experiment</string>
+     </attribute>
+     <widget class="QScrollArea" name="scrollArea_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>761</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>759</width>
+         <height>429</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_19">
         <item>
-         <widget class="QLabel" name="label_count_faces">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Count faces in train sample </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
-          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QLineEdit" name="count_faces_in_train">
+           <widget class="QPushButton" name="buttonSelectFace">
             <property name="minimumSize">
              <size>
-              <width>100</width>
+              <width>0</width>
               <height>30</height>
              </size>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>150</width>
-              <height>16777215</height>
-             </size>
-            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(190, 190, 190);
-padding-left: 10px;</string>
+             <string notr="true">border-radius: 4px;
+background-color: rgba(0, 57, 127, 81);
+padding: 0 20px;</string>
             </property>
             <property name="text">
-             <string>4</string>
-            </property>
-            <property name="placeholderText">
-             <string>Enter № Class</string>
+             <string>Select Face</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="resultButton">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(0, 146, 14);
-color: rgb(255, 255, 255);
-margin-left: 15px;</string>
-            </property>
+           <widget class="QCheckBox" name="checkBox_image_download">
             <property name="text">
-             <string>Find</string>
+             <string>Изображение загружено</string>
             </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="autoDefault">
+            <property name="checked">
              <bool>true</bool>
             </property>
-            <property name="default">
+            <property name="tristate">
              <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_6">
+           <spacer name="horizontalSpacer_8">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -208,84 +292,370 @@ margin-left: 15px;</string>
           </item>
          </layout>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="title_selecteion_method"/>
-      </item>
-      <item>
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QLabel" name="label_parallel_system">
-            <property name="maximumSize">
+           <widget class="QPushButton" name="buttonRunRecognizer">
+            <property name="minimumSize">
              <size>
-              <width>16777215</width>
+              <width>0</width>
               <height>30</height>
              </size>
             </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border-radius: 4px;
+color: rgb(142, 142, 142);
+padding: 0 20px;
+background-color: rgb(198, 198, 198);</string>
             </property>
             <property name="text">
-             <string>Score of parallel system</string>
+             <string>Run recognizer</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_parallel_system_value">
-            <property name="maximumSize">
+           <spacer name="horizontalSpacer_17">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>16777215</width>
-              <height>30</height>
+              <width>40</width>
+              <height>20</height>
              </size>
             </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="text">
-             <string>Score</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_21">
+          <item>
+           <widget class="QLabel" name="label_extraction_feature">
+            <property name="text">
+             <string>Exraction fueatures</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_28"/>
+            </item>
+            <item row="1" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_27"/>
+            </item>
+            <item row="1" column="2">
+             <layout class="QVBoxLayout" name="verticalLayout_29"/>
+            </item>
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_17"/>
+            </item>
+            <item row="0" column="2">
+             <layout class="QVBoxLayout" name="verticalLayout_26"/>
+            </item>
+            <item row="0" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_25"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_30">
+          <item>
+           <widget class="QLabel" name="label_result">
+            <property name="text">
+             <string>Results</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="1" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_32"/>
+            </item>
+            <item row="1" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_31"/>
+            </item>
+            <item row="0" column="1">
+             <layout class="QVBoxLayout" name="verticalLayout_35"/>
+            </item>
+            <item row="0" column="2">
+             <layout class="QVBoxLayout" name="verticalLayout_34"/>
+            </item>
+            <item row="1" column="2">
+             <layout class="QVBoxLayout" name="verticalLayout_36"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+      </widget>
+     </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>2</width>
-      <height>2</height>
+      <x>10</x>
+      <y>10</y>
+      <width>781</width>
+      <height>58</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="param_bin_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Histogram</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="param_histogram">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">padding-left: 10px;
+background-color: rgb(194, 194, 194);
+</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>BIN=32</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="param_dft_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>DFT</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="param_dft">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">padding-left: 10px;
+background-color: rgb(194, 194, 194);
+</string>
+         </property>
+         <property name="placeholderText">
+          <string>P/Q=20</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="param_dct_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>DCT</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="param_dct">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">padding-left: 10px;
+background-color: rgb(194, 194, 194);
+</string>
+         </property>
+         <property name="placeholderText">
+          <string>P/Q=20</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QLabel" name="param_scale_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Scale</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="param_scale">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">padding-left: 10px;
+background-color: rgb(194, 194, 194);
+</string>
+         </property>
+         <property name="placeholderText">
+          <string>Scale=0.3</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QLabel" name="param_gradient_label">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Gradient</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="param_gradient">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">padding-left: 10px;
+background-color: rgb(194, 194, 194);
+</string>
+         </property>
+         <property name="placeholderText">
+          <string>W=2</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -293,7 +663,7 @@ margin-left: 15px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>826</width>
+     <width>800</width>
      <height>24</height>
     </rect>
    </property>
