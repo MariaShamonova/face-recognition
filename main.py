@@ -47,16 +47,16 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         self.buttonRunRecognizer.setEnabled(False)
         self.buttonExploreMethods.setEnabled(False)
         self.buttonParallelSystem.setEnabled(False)
-      
+
 
         self.path_to_file = ''
         self.selected_face = ''
 
-        self.param_histogram.setText('16')
-        self.param_dft.setText('12')
-        self.param_dct.setText('11')
-        self.param_scale.setText('0.3')
-        self.param_gradient.setText('8')
+        self.param_histogram.setText('21')
+        self.param_dft.setText('9')
+        self.param_dct.setText('8')
+        self.param_scale.setText('0.1')
+        self.param_gradient.setText('4')
 
         self.methods = {
             Histogram: {'name': 'BIN', 'input_field': self.param_histogram},
@@ -93,7 +93,6 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         enable_button_run_recognizer(self)
 
         add_feature(self,self.path_to_file, 'Query Image', 0, 0)
-
 
     def run_recognizer(self):
         self.label_extraction_feature.setVisible(True)
@@ -158,18 +157,18 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
         return results
 
     def explore_parallel_system(self):
-        data_faces, data_target = get_faces_data()
+        # data_faces, data_target = get_faces_data()
         folds = np.arange(2, 10)
         scores_validation = []
-        # self.computing_image.show()
-        # self.computing_result.show()
-        # self.label_computing.show()
 
         for fold in folds:
-            # self.label_computing.setText(_translate("MainWindow", f"Computing on {fold} folds"))
             scores_for_k_fold = []
 
-            for x_train, y_train, x_test, y_test in split_data_for_cross_validation(data_faces, data_target, fold):
+            for x_train, y_train, x_test, y_test in split_data_for_cross_validation(self.data_faces,
+                                                                                    self.data_target,
+                                                                                    fold,
+                                                                                    self.data_deidentify_faces,
+                                                                                    self.data_with_mask_faces):
 
                 answers_futures = []
 
@@ -197,7 +196,55 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
 
             scores_validation.append((fold, statistics.mean(scores_for_k_fold)))
 
-        display_parallel_system(self, scores_validation)
+        scores_count_image = self.get_score_for_count_images_for_test(6, self.selected_faces_index)
+        display_parallel_system(self, scores_validation, scores_count_image)
+
+    def get_score_for_count_images_for_test(self, num_faces_for_train: int = 4, selected_faces_index: bool = 0):
+
+        x_train, y_train, x_test, y_test = faces_repository.split_data(
+            self.data_faces,
+            self.data_target,
+            self.data_deidentify_faces,
+            self.data_with_mask_faces,
+            num_faces_for_train,
+            selected_faces_index,
+        )
+        scores_count_image = []
+        for idx in range(1, len(y_test)):
+            print(idx)
+            x_test_temp = x_test[:idx]
+            y_test_temp = y_test[:idx]
+
+            answers_futures = []
+
+            for method in self.methods:
+                classifier = method()
+                face_recognizer = FaceRecognizer(x_train=x_train,
+                                                 x_test=x_test_temp,
+                                                 y_train=y_train,
+                                                 y_test=y_test_temp,
+                                                 classifier=classifier)
+                face_recognizer.teach_recognizer()
+                answers_futures.append(face_recognizer.get_answers)
+
+            answers = self.parallelize(len(self.methods), answers_futures)
+
+            correct_answer = 0
+
+            for idx_test in range(len(y_test_temp)):
+                answer = mode([recognizer_answer[idx_test] for recognizer_answer in answers])
+
+                if y_test_temp[idx_test] == answer:
+                    correct_answer += 1
+
+            score = correct_answer / len(y_test_temp)
+            scores_count_image.append((idx, score))
+
+        return scores_count_image
+
+
+
+
 
     def on_changed(self, text):
         method_name = self.comboBox.currentText()

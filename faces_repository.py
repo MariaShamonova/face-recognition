@@ -46,12 +46,8 @@ def split_data(train_data: np.ndarray,
                num_faces_for_train: int,
                selected_faces_index: bool = 0) -> tuple[
     list, list, list, list]:
-    data = [np.array_split(train_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET),
-            np.array_split(target_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET)]
-    if selected_faces_index == 1:
-        data.append(np.array_split(data_deidentify, len(data_deidentify) / NUM_FACES_OF_PERSON_IN_DATASET))
-    elif selected_faces_index == 2:
-        data.append(np.array_split(data_mask, len(data_mask) / NUM_FACES_OF_PERSON_IN_DATASET))
+
+    data = create_data(train_data, target_data, data_deidentify, data_mask, selected_faces_index)
 
     x_train = []
     y_train = []
@@ -88,15 +84,18 @@ def split_data(train_data: np.ndarray,
     return x_train, y_train, x_test, y_test
 
 
-def split_data_for_cross_validation(train_data: np.ndarray, target_data: np.ndarray, num_folds: int) -> tuple[
+def split_data_for_cross_validation(train_data: np.ndarray,
+                                    target_data: np.ndarray,
+                                    num_folds: int,
+                                    data_deidentify: np.ndarray,
+                                    data_mask: np.ndarray,
+                                    selected_faces_index: bool = 0) -> tuple[
     list, list, list, list]:
 
-    all_faces_train_chunks = np.array_split(train_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET)
+    data = create_data(train_data, target_data, data_deidentify, data_mask, selected_faces_index)
 
-    for chunk in all_faces_train_chunks:
+    for chunk in data[0]:
         np.random.shuffle(chunk)
-
-    all_faces_target_chunks = np.array_split(target_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET)
 
     faces_indexes = np.arange(NUM_FACES_OF_PERSON_IN_DATASET)
 
@@ -111,15 +110,41 @@ def split_data_for_cross_validation(train_data: np.ndarray, target_data: np.ndar
         y_test = []
         train_indexes = set(faces_indexes) - set(test_indexes)
 
-        for person_images, person_targets in zip(all_faces_train_chunks, all_faces_target_chunks):
+        for elements in zip(*data):
+            person_images = elements[0]
+            person_targets = elements[1]
+
+            if selected_faces_index == 1:
+                deidentify_faces = elements[2]
+            if selected_faces_index == 2:
+                mask_faces = elements[2]
 
             x_train.extend(person_images[index] for index in train_indexes)
             y_train.extend(person_targets[index] for index in train_indexes)
 
-            x_test.extend(person_images[index] for index in test_indexes)
+            if selected_faces_index == 1:
+                x_test.extend(deidentify_faces[index] for index in test_indexes)
+            elif selected_faces_index == 2:
+                x_test.extend(mask_faces[index] for index in test_indexes)
+            else:
+                x_test.extend(person_images[index] for index in test_indexes)
+
             y_test.extend(person_targets[index] for index in test_indexes)
 
         yield x_train, y_train, x_test, y_test
 
 
+def create_data(
+                train_data: np.ndarray,
+                target_data: np.ndarray,
+                data_deidentify: np.ndarray,
+                data_mask: np.ndarray,
+                selected_faces_index: bool = 0 ):
+    data = [np.array_split(train_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET),
+            np.array_split(target_data, len(train_data) / NUM_FACES_OF_PERSON_IN_DATASET)]
+    if selected_faces_index == 1:
+        data.append(np.array_split(data_deidentify, len(data_deidentify) / NUM_FACES_OF_PERSON_IN_DATASET))
+    elif selected_faces_index == 2:
+        data.append(np.array_split(data_mask, len(data_mask) / NUM_FACES_OF_PERSON_IN_DATASET))
 
+    return data

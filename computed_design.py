@@ -47,7 +47,7 @@ def deleteItems(layout):
 			else:
 				deleteItems(item.layout())
 
-def display_parallel_system(self, validation_scores):
+def display_parallel_system(self, validation_scores, scores_count_image):
 	remove_spacer(self.verticalLayout_8, self.spacerItem3)
 	self.verticalLayout_14 = QtWidgets.QVBoxLayout()
 	self.verticalLayout_14.setObjectName("verticalLayout_14")
@@ -60,6 +60,7 @@ def display_parallel_system(self, validation_scores):
 	self.horizontalLayout_6.setObjectName("horizontalLayout_6")
 
 	add_chart(self, self.horizontalLayout_6, validation_scores, "Cross Validation")
+	add_chart(self, self.horizontalLayout_6, scores_count_image, "Count faces in test")
 
 	self.verticalLayout_14.addLayout(self.horizontalLayout_6)
 	self.verticalLayout_8.addLayout(self.verticalLayout_14)
