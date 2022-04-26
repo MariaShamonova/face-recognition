@@ -83,13 +83,24 @@ class FaceRecognizer:
 
         return correct_answers / len(self.faces_test_featured)
 
-    def cross_validation(self, train_data: np.ndarray, target_data: np.ndarray, param: int):
+    def cross_validation(self,
+                         train_data: np.ndarray,
+                         target_data: np.ndarray,
+                         param: int,
+                         data_deidentify: np.ndarray,
+                         data_mask: np.ndarray,
+                         selected_faces_index):
         folds = np.arange(2, 10)
         scores = []
         for fold in folds:
             scores_for_k_fold = []
 
-            for x_train, y_train, x_test, y_test in split_data_for_cross_validation(train_data, target_data, fold):
+            for x_train, y_train, x_test, y_test in split_data_for_cross_validation(train_data,
+                                                                                    target_data,
+                                                                                    fold,
+                                                                                    data_deidentify,
+                                                                                    data_mask,
+                                                                                    selected_faces_index ):
                 self.set_new_data( x_train, y_train, x_test, y_test)
 
                 self.update_features(param)

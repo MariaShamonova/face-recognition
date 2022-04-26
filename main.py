@@ -140,7 +140,12 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
 
             scores_params = face_recognizer.get_list_params()
             best_param, max_score = max(scores_params, key=lambda x: x[1])
-            scores_folds = face_recognizer.cross_validation(self.data_faces, self.data_target, best_param)
+            scores_folds = face_recognizer.cross_validation(self.data_faces,
+                                                            self.data_target,
+                                                            best_param,
+                                                            self.data_deidentify_faces,
+                                                            self.data_with_mask_faces,
+                                                            self.selected_faces_index)
 
             display_scores(self, scores_params, scores_folds, method.__name__, self.methods[method].get('name'), best_param, max_score)
 
@@ -168,7 +173,8 @@ class Main_Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                                                                     self.data_target,
                                                                                     fold,
                                                                                     self.data_deidentify_faces,
-                                                                                    self.data_with_mask_faces):
+                                                                                    self.data_with_mask_faces,
+                                                                                    self.selected_faces_index):
 
                 answers_futures = []
 
